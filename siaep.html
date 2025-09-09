@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SIEP - Sistema Integrado de Ensino</title>
+    <style>
+        /* Estilos do Login */
+        .login-container {
+            margin: 0;
+            padding: 0;
+            background-color: #777;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            background-color: #fff;
+            width: 340px;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .login-box img {
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .login-box h1 {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .login-box input[type="text"],
+        .login-box input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .captcha {
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .captcha input {
+            margin-right: 10px;
+        }
+
+        .remember-me {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            font-size: 14px;
+        }
+
+        .remember-me input {
+            margin-right: 5px;
+        }
+
+        .login-box button {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            margin-top: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .subtext {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .gov-title {
+            font-weight: bold;
+        }
+
+        .flag {
+            float: right;
+            height: 30px;
+        }
+        
+        /* Estilos do Sistema SIEP */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .system-container {
+            display: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f6f8; 
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 240px;
+            background-color: #1d2939;
+            color: white;
+            padding: 20px 10px;
+            font-size: 14px;
+            line-height: 1.5;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar strong {
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 13px;
+            color: #a8b1bc;
+            text-align: center;
+        }
+        
+        .sidebar p {
+            margin: 2px 0;
+            font-size: 13px;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        .sidebar ul li {
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .sidebar ul li:hover {
+            color: white;
+            font-weight: bold;
+        }
+        
+        .sidebar .submenu {
+            padding-left: 15px;
+            color: #98a5bb;
+            font-size: 13px;
+        }
+        
+        .sidebar .submenu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar .submenu li.active {
+            color: white;
+            font-weight: bold;
+        }
+        
+        .sidebar .new-label {
+            background-color: #28a745;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+        }
+        
+        .sidebar .contact-section {
+            font-size: 12px;
+            margin-top: 30px;
+            color: #a6b1c9;
+        }
+        
+        .sidebar .contact-section strong {
+            display: block;
+            margin-bottom: 8px;
+            color: white;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 240px;
+            padding: 20px;
+        }
+        
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .top-bar h2 {
+            color: #003366;
+            font-weight: 700;
+            font-size: 22px;
+        }
+        
+        .relatorios {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .relatorios label {
+            margin-left: 5px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        .btn-azul {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .box {
+            background: white;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        input[type="text"], select, textarea {
+            padding: 6px 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        
+        label.checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .btn-localizar {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #f90;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .filter-section {
+            border: 1px solid #a1a1a1;
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        
+        .filter-section h3 {
+            margin: 0 0 12px 0;
+            font-weight: 600;
+            font-size: 16px;
+            color: #222;
+        }
+        
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px 30px;
+            margin-bottom: 10px;
+        }
+        
+        .filter-row label {
+            min-width: 110px;
+            font-size: 14px;
+            line-height: 24px;
+            color: #444;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+        
+        .buttons-row {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-search {
+            background-color: #e9ecef;
+            border: 1px solid #ccc;
+            padding: 6px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #444;
+        }
+        
+        .btn-cadastrar {
+            background-color: #00aaff;
+            border: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .btn-voltar {
+            background-color: #f39c12;
+            border: none;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+        
+        th, td {
+            padding: 10px 8px;
+            border: 1px solid #ccc;
+            text-align: left;
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: #00c8ff;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tbody tr {
+            background-color: #b9ecff;
+            border-bottom: 1px solid #4fb0e6;
+        }
+        
+        tbody tr:hover {
+            background-color: #a4dbff;
+        }
+        
+        .badge {
+            background: #00c8ff;
+            color: white;
+            padding: 3px 7px;
+            font-size: 11px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        
+        button.frequencia-btn, .badge-frequency {
+            background: #4a4a4a;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .registro-count {
+            background-color: #0099ff;
+            color: white;
+            padding: 3px 9px;
+            border-radius: 3px;
+            font-weight: 600;
+            font-size: 13px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox-group {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .form-cadastro {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .form-cadastro label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .form-cadastro input, .form-cadastro select, .form-cadastro textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        .form-cadastro .full-width {
+            grid-column: 1 / span 2;
+        }
+        
+        .btn-submit {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        
+        /* Estilo para o botão de excluir */
+        .btn-excluir {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        
+        .btn-excluir:hover {
+            background-color: #c9302c;
+        }
+        
+        .acoes-cell {
+            display: flex;
+            gap: 5px;
+        }
+        /* Ajuste específico para o fieldset de Tipo de Aula */
+#page-cadastro-aula fieldset.full-width.fieldset-no-border {
+  display: flex;
+  gap: 20px;
+  border: none;
+  padding: 0;
+}
+
+#page-cadastro-aula fieldset.full-width.fieldset-no-border label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #444;
+}
+
+/* Remover margem extra que tava causando espaçamento estranho */
+#page-cadastro-aula label.margin-left-20 {
+  margin-left: 0;
+}
+
+
+    </style>
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="login-container" class="login-container">
+        <div class="login-box">
+            <div style="text-align:left;">
+                <span class="gov-title">GOVERNO DO<br><strong>MARANHÃO</strong><br><small>SEDUC</small></span>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Bandeira_do_Maranhão.svg/320px-Bandeira_do_Maranhão.svg.png" class="flag" alt="Bandeira do Maranhão">
+            </div>
+
+            <h1>ACESSO</h1>
+            <p class="subtext">Faça login para iniciar sua sessão</p>
+            
+            <input type="text" id="cpf" placeholder="CPF">
+            <input type="password" id="senha" placeholder="Senha">
+
+            <div class="captcha">
+                <input type="checkbox" id="robot">
+                <label for="robot">Não sou um robô</label>
+                <img src="https://www.gstatic.com/recaptcha/api2/logo_48.png" alt="captcha" style="margin-left: auto; height: 20px;">
+            </div>
+
+            <div class="remember-me">
+                <input type="checkbox" id="lembrar">
+                <label for="lembrar"><strong>Me Lembrar</strong></label>
+            </div>
+
+            <button id="btn-login">Entrar</button>
+        </div>
+    </div>
+
+    <!-- Sistema SIEP (inicialmente oculto) -->
+    <div id="system-container" class="system-container">
+        <div class="container">
+            <aside class="sidebar">
+                <p><strong>Escola</strong></p>
+                <p>Principal</p>
+
+                <p><strong>Área do Professor</strong></p>
+                <ul>
+                    <li onclick="showPage('turmas')">Turmas</li>
+                    <li onclick="showPage('aulas')"><b>Aulas</b></li>
+                    <li onclick="showPage('frequencia')">Frequência</li>
+                    <li onclick="showPage('avaliacoes')">Avaliações</li>
+                    <li onclick="showPage('notas')">Notas</li>
+                </ul>
+
+                <p><strong>Ajuda e Tutoriais <span class="new-label">Novo</span></strong></p>
+
+                <div class="contact-section">
+                    <strong>SUPORTE</strong>
+                    <p><b>ATENDIMENTO TELEFÔNICO</b></p>
+                    <p>0800 2800 152</p>
+
+                    <p><b>E-MAIL</b></p>
+                    <p>atendimento.siaep@edu.ma.gov.br</p>
+
+                    <p>Conn:535</p>
+
+                    <p><b>SUPRE</b></p>
+                    <p>(98) 3268-2616</p>
+                    <p>(98) 3235-6815</p>
+                </div>
+            </aside>
+
+            <main class="main-content">
+                <!-- Página de Aulas Localizadas -->
+                <div id="page-aulas" class="page active">
+                    <div class="top-bar">
+                        <h2>Aulas</h2>
+                        <div class="relatorios">
+                            <label><input type="radio" name="relatorio"> PDF</label>
+                            <label><input type="radio" name="relatorio"> EXCEL</label>
+                            <button class="btn-azul">Conteúdo</button>
+                        </div>
+                    </div>
+
+                    <div class="box">
+                        <h3>🔍 Localizar Aula</h3>
+                        <div class="form-grid">
+                            <input type="text" placeholder="Localizar Aula" />
+                            <select>
+                                <option>Componente Curricular</option>
+                            </select>
+                            <select>
+                                <option>Momento</option>
+                            </select>
+                            <select>
+                                <option>Mês</option>
+                            </select>
+                            <select>
+                                <option>Aula Ministrada</option>
+                            </select>
+                            <select>
+                                <option>Aula Validada</option>
+                            </select>
+                            <select>
+                                <option>Não Presencial</option>
+                            </select>
+                        </div>
+                        <label class="checkbox-label"><input type="checkbox" /> Aula Extra</label>
+                        <div style="margin-top:12px;">
+                            <button class="btn-localizar" onclick="showPage('localizar-aulas')">Localizar</button>
+                            <button class="btn-localizar" style="background:#f90;" onclick="showPage('cadastro-aula')">Cadastrar</button>
+                            <button class="btn-localizar" style="background:#d9534f;">Voltar</button>
+                        </div>
+
+                        <span class="registro-count" id="contador-aulas">0 registro(s)</span>
+
+                        <table id="tabela-aulas">
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Componente Curricular</th>
+                                    <th>Data Aula</th>
+                                    <th>Momento</th>
+                                    <th>Aula Extra</th>
+                                    <th>Ações</th>
+                                    <th>Data Lançamento</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpo-tabela-aulas">
+                                <!-- As aulas serão adicionadas aqui dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Página de Cadastro de Aulas (Organizado) -->
+<div id="page-cadastro-aula" class="page">
+  <h2 class="title">📚 Cadastro de Aula</h2>
+
+  <form id="formCadastroAula" class="form-cadastro">
+
+    <!-- Tipo de Aula -->
+    <fieldset class="full-width fieldset-no-border">
+      <legend class="legend-bold">Tipo de Aula</legend>
+      <label>
+        <input type="checkbox" name="aula_extra" />
+        Aula Extra
+      </label>
+      <label class="margin-left-20">
+        <input type="checkbox" name="nao_presencial" />
+        Não Presencial
+      </label>
+    </fieldset>
+
+    <!-- Data -->
+    <div class="form-group">
+      <label for="data">📅 Data</label>
+      <input
+        type="text"
+        id="data"
+        name="data"
+        required
+        placeholder="dd/mm/aaaa"
+        class="input-text"
+      />
+    </div>
+
+    <!-- Horário da Turma -->
+    <div class="form-group">
+      <label for="horario_turma">⏰ Horário da Turma</label>
+      <select id="horario_turma" name="horario_turma" required class="select-input">
+        <option value="">-- Selecione --</option>
+        <option value="QUINTA 4º HORARIO das 9:30 às 11:30 - QUIMICA - GILBERTE GRAZEANO">
+          QUINTA 4º HORARIO das 9:30 às 11:30 - QUIMICA - GILBERTE GRAZEANO
+        </option>
+      </select>
+    </div>
+
+    <!-- Professor -->
+    <div class="form-group">
+      <label for="professor">👨‍🏫 Professor</label>
+      <input
+        type="text"
+        id="professor"
+        name="professor"
+        required
+        placeholder="Nome do professor"
+        class="input-text"
+      />
+    </div>
+
+    <!-- Momento -->
+    <div class="form-group">
+      <label for="momento">📘 Momento</label>
+      <select id="momento" name="momento" required class="select-input">
+        <option value="">-- Selecione --</option>
+        <option value="3º PERIODO">3º PERIODO</option>
+      </select>
+    </div>
+
+    <!-- Horários da Aula -->
+    <div class="form-group">
+      <label for="inicio">🕒 Início</label>
+      <input
+        type="text"
+        id="inicio"
+        name="inicio"
+        required
+        placeholder="Ex: 9:30"
+        class="input-text"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="termino">🕓 Término</label>
+      <input
+        type="text"
+        id="termino"
+        name="termino"
+        required
+        placeholder="Ex: 10:20"
+        class="input-text"
+      />
+    </div>
+
+    <!-- Reposição -->
+    <div class="form-group">
+      <label for="data_reposicao">📅 Data Reposição</label>
+      <input
+        type="text"
+        id="data_reposicao"
+        name="data_reposicao"
+        placeholder="dd/mm/aaaa"
+        class="input-text"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="inicio_reposicao">🕒 Início Reposição</label>
+      <input
+        type="text"
+        id="inicio_reposicao"
+        name="inicio_reposicao"
+        placeholder="Ex: 9:30"
+        class="input-text"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="termino_reposicao">🕓 Término Reposição</label>
+      <input
+        type="text"
+        id="termino_reposicao"
+        name="termino_reposicao"
+        placeholder="Ex: 10:20"
+        class="input-text"
+      />
+    </div>
+
+    <!-- Outras Informações -->
+    <fieldset class="full-width checkbox-group fieldset-no-border">
+      <legend class="legend-bold">Outras Informações</legend>
+      <label><input type="checkbox" name="todos_presentes" /> Todos Presentes</label>
+      <label><input type="checkbox" name="aula_tutoria" /> Aula Tutoria</label>
+      <label><input type="checkbox" name="aula_pratica" /> Aula Prática</label>
+      <label><input type="checkbox" name="aula_ministrada" /> Aula Ministrada</label>
+      <label><input type="checkbox" name="aula_validada" /> Aula Validada</label>
+    </fieldset>
+
+    <!-- Tema -->
+    <div class="form-group full-width">
+      <label for="tema">📝 Tema</label>
+      <textarea
+        id="tema"
+        name="tema"
+        maxlength="500"
+        placeholder="Tema da aula"
+        rows="2"
+        class="textarea-input"
+      ></textarea>
+    </div>
+
+    <!-- Descrição -->
+    <div class="form-group full-width">
+      <label for="descricao">📄 Descrição</label>
+      <textarea
+        id="descricao"
+        name="descricao"
+        maxlength="500"
+        placeholder="Descrição da aula (máximo 500 caracteres)"
+        rows="3"
+        class="textarea-input"
+      ></textarea>
+    </div>
+
+    <!-- Conteúdo Ministrado -->
+    <div class="form-group full-width">
+      <label for="conteudo_ministrado">📚 Conteúdo Ministrado</label>
+      <select id="conteudo_ministrado" name="conteudo_ministrado" class="select-input">
+        <option value="">-- Filtrar Conteúdo pelo Momento --</option>
+      </select>
+    </div>
+
+    <!-- Botões -->
+    <div class="form-group full-width buttons-container">
+      <button type="submit" class="btn-submit">✅ Cadastrar Aula</button>
+      <button type="button" class="btn-voltar" onclick="showPage('aulas')">↩️ Voltar</button>
+    </div>
+  </form>
+</div>
+</style>
+
+                <!-- Páginas de outras funcionalidades (simplificadas) -->
+                <div id="page-turmas" class="page">
+                    <h2>Turmas</h2>
+                    <div class="box">
+                        <p>Conteúdo da página de turmas</p>
+                    </div>
+                </div>
+
+                <div id="page-frequencia" class="page">
+                    <h2>Frequência</h2>
+                    <div class="box">
+                        <p>Conteúdo da página de frequência</p>
+                    </div>
+                </div>
+
+                <div id="page-avaliacoes" class="page">
+                    <h2>Avaliações</h2>
+                    <div class="box">
+                        <p>Conteúdo da página de avaliações</p>
+                    </div>
+                </div>
+
+                <div id="page-notas" class="page">
+                    <h2>Notas</h2>
+                    <div class="box">
+                        <p>Conteúdo da página de notas</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Função para fazer login
+        document.getElementById('btn-login').addEventListener('click', function() {
+            const cpf = document.getElementById('cpf').value;
+            const senha = document.getElementById('senha').value;
+            
+            // Validação simples (em um sistema real, isso seria feito no servidor)
+            if (cpf && senha) {
+                // Esconde a tela de login
+                document.getElementById('login-container').style.display = 'none';
+                
+                // Mostra o sistema
+                document.getElementById('system-container').style.display = 'block';
+                
+                // Mostra a página de aulas por padrão
+                showPage('aulas');
+                carregarAulasNaTabela();
+            } else {
+                alert('Por favor, preencha CPF e senha!');
+            }
+        });
+        
+        // Função para alternar entre páginas
+        function showPage(pageId) {
+            // Esconder todas as páginas
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Mostrar a página solicitada
+            document.getElementById(`page-${pageId}`).classList.add('active');
+            
+            // Se for a página de aulas, recarregar a tabela
+            if (pageId === 'aulas') {
+                carregarAulasNaTabela();
+            }
+        }
+        
+        // Funções para gerenciar o cadastro de aulas
+        function salvarAula(aula) {
+            let aulas = JSON.parse(localStorage.getItem('aulas')) || [];
+            // Gerar um ID único para a aula
+            aula.id = Date.now().toString();
+            // Adicionar data de lançamento atual
+            aula.data_lancamento = new Date().toLocaleString('pt-BR');
+            aulas.push(aula);
+            localStorage.setItem('aulas', JSON.stringify(aulas));
+        }
+        
+        function excluirAula(id) {
+            if (confirm('Tem certeza que deseja excluir esta aula?')) {
+                let aulas = JSON.parse(localStorage.getItem('aulas')) || [];
+                // Garantir que estamos comparando strings
+                aulas = aulas.filter(aula => String(aula.id) !== id);
+                localStorage.setItem('aulas', JSON.stringify(aulas));
+                carregarAulasNaTabela(); 
+    }
+}
+
+        
+        function carregarAulasNaTabela() {
+            const corpoTabela = document.getElementById('corpo-tabela-aulas');
+            corpoTabela.innerHTML = '';
+            let aulas = JSON.parse(localStorage.getItem('aulas')) || [];
+        
+            // Atualizar contador
+            document.getElementById('contador-aulas').textContent = `${aulas.length} registro(s)`;
+        
+            if (aulas.length === 0) {
+                // Adicionar linha vazia se não houver aulas
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td colspan="7" style="text-align: center;">Nenhuma aula cadastrada</td>`;
+                corpoTabela.appendChild(tr);
+                return;
+            }
+        
+            aulas.forEach((aula, i) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${aula.descricao || 'AULA'}</td>
+                    <td>${aula.horario_turma || 'ESTUDO ORIENTADO E AVALIACAO SEMANAL'}</td>
+                    <td>${aula.data}${aula.inicio ? `(${aula.inicio})` : ''}</td>
+                    <td>${aula.momento || '3º PERIODO'}</td>
+                    <td>${aula.aula_extra ? 'SIM' : 'NÃO'}</td>
+                    <td class="acoes-cell">
+                        <button class="frequencia-btn">Frequência</button>
+                        <button class="btn-excluir" onclick="excluirAula('${aula.id}')">Excluir</button>
+                    </td>
+                    <td>${aula.data_lancamento || '15/09/2023(09:07)'}</td>
+                `;
+                corpoTabela.appendChild(tr);
+            });
+        }
+        
+        // Configurar o formulário de cadastro
+        document.getElementById('formCadastroAula').addEventListener('submit', function(e) {
+            e.preventDefault();
+        
+            const formData = new FormData(this);
+        
+            const aula = {};
+            for (const [key, value] of formData.entries()) {
+                aula[key] = value;
+            }
+        
+            ['aula_extra', 'nao_presencial', 'todos_presentes', 'aula_tutoria', 'aula_pratica', 'aula_ministrada', 'aula_validada'].forEach(chk => {
+                aula[chk] = formData.get(chk) === 'on';
+            });
+        
+            salvarAula(aula);
+        
+            alert('Aula cadastrada com sucesso!');
+            this.reset();
+            
+            // Redirecionar para a página de listagem de aulas
+            showPage('aulas');
+        });
+        
+        // Carregar aulas ao iniciar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar a tabela se estiver vazia
+            if (!localStorage.getItem('aulas')) {
+                // Adicionar exemplo inicial
+                const aulaExemplo = {
+                    id: "1",
+                    descricao: "AULA",
+                    horario_turma: "ESTUDO ORIENTADO E AVALIACAO SEMANAL",
+                    data: "15/09/2023",
+                    inicio: "07:30",
+                    momento: "3º PERIODO",
+                    aula_extra: false,
+                    data_lancamento: "15/09/2023(09:07)"
+                };
+                localStorage.setItem('aulas', JSON.stringify([aulaExemplo]));
+            }
+        });
+    </script>
+</body>
+</html>
